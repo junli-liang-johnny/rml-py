@@ -19,6 +19,7 @@ class ConfigParser:
             columns = []
  
             subject_map = self.graph.value(trples_map, rr.subjectMap)
+            print("subject_map: ", subject_map)
             template = self.graph.value(subject_map, rr.template)
             print("Template: ", template)
             class_map = self.graph.value(subject_map, rr["class"])
@@ -28,14 +29,15 @@ class ConfigParser:
             source_file = self.graph.value(logical_source, predicate=rml.source)
             file_type = self.graph.value(logical_source, predicate=rml.referenceFormulation)
             print("Source file: ", source_file)
+            print("File type: ", file_type)
 
             predicate_object_maps = list(self.graph.objects(trples_map, rr.predicateObjectMap))
             for predicate_object_map in predicate_object_maps:
                 predicate = self.graph.value(predicate_object_map, predicate=rr.predicate)
                 object_map = self.graph.value(predicate_object_map, rr.objectMap)
-                column, language, datatype, split_by = object_map_parser.parse(object_map)
-                print("Column: ", column, ", Predicate: ", predicate, ", Language: ", language, ", Datatype: ", datatype, ", Split by: ", split_by)
-                columns.append((column, predicate, datatype, language, split_by))
+                column, language, datatype, split_by, _template = object_map_parser.parse(object_map)
+                # print("Column: ", column, ", Predicate: ", predicate, ", Language: ", language, ", Datatype: ", datatype, ", Split by: ", split_by, ", Template: ", _template)
+                columns.append((column, predicate, datatype, language, split_by, _template))
 
             results.append((source_file, file_type, template, class_map, columns))
 

@@ -23,8 +23,7 @@ for prefix, uri in namespaces:
 config_parser = ConfigParser(input_graph)
 triples_maps = config_parser.parse()
 for source_file, file_type, template, class_map, columns in triples_maps:
-		# process_csv_to_rdf(source_file, template, class_map, columns, output_graph)
-		CSV2RDF(source_file).process_csv_to_rdf(template, class_map, columns, output_graph)
+    CSV2RDF(source_file).process_csv_to_rdf(template, class_map, columns, output_graph)
 
 # Serialize the graph to a TTL file
 output_graph.serialize(destination=str(args.output), format='turtle')
