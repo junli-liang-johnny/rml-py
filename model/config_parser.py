@@ -1,8 +1,8 @@
-from .triples_map_parser import TriplesMapParser
-from .object_map_parser import ObjectMapParser
-from .predicate_object_map_parser import PredicateObjectMapParser
+from .rml.triples_map_parser import TriplesMapParser
+from .rml.object_map_parser import ObjectMapParser
+from .rml.predicate_object_map_parser import PredicateObjectMapParser
 from .logical_target_parser import LogicalTargetParser
-from .subject_map_parser import SubjectMapParser
+from .rml.subject_map_parser import SubjectMapParser
 from .namespace import rr, rml
 
 class ConfigParser:
@@ -26,22 +26,22 @@ class ConfigParser:
  
             # subject map parser
             subject_map = self.graph.value(trples_map, rr.subjectMap)
-            template, rdf_class, subject_logical_target_map = self.subject_map_parser.parse(subject_map)
-            print("Template: ", template, ", Class: ", rdf_class)
+            template, rdf_class_map, subject_logical_target_map = self.subject_map_parser.parse(subject_map)
+            print("Template: ", template, ", rdf_class_map: ", rdf_class_map, "\n")
 
             # logical source parser
             logical_source = self.graph.value(trples_map, rml.logicalSource)
             source_file = self.graph.value(logical_source, predicate=rml.source)
             file_type = self.graph.value(logical_source, predicate=rml.referenceFormulation)
-            print("Source file: ", source_file)
-            print("File type: ", file_type)
+            # print("Source file: ", source_file)
+            # print("File type: ", file_type)
 
             predicate_object_maps = list(self.graph.objects(trples_map, rr.predicateObjectMap))
             for predicate_object_map in predicate_object_maps:
                 predicate_list, object_map, object_list, logical_target_map = self.predicate_object_map_parser.parse(predicate_object_map)
                 column, obj, language, datatype, split_by, _template  = self.object_map_parser.parse(object_map)
                 logical_target_tuple = self.logical_target_parser.parse(predicate_object_map)
-                print("Predicate: ", predicate_list, ", Object: ", object_list, ", Column: ", column, ", Language: ", language, ", Datatype: ", datatype, ", Split by: ", split_by, ", Template: ", _template)
+                # print("Predicate: ", predicate_list, ", Object: ", object_list, ", Column: ", column, ", Language: ", language, ", Datatype: ", datatype, ", Split by: ", split_by, ", Template: ", _template)
 
                 for predicate in predicate_list:
                     if len(object_list) > 0:
@@ -52,7 +52,7 @@ class ConfigParser:
                     else:
                         columns.append((None, column, predicate, datatype, language, split_by, _template, logical_target_tuple))
 
-            results.append((source_file, file_type, template, rdf_class, columns))
+            results.append((source_file, file_type, template, rdf_class_map, columns))
             print("\n")
 
         return results

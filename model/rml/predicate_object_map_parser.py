@@ -1,4 +1,4 @@
-from .namespace import rr, rml
+from ..namespace import rr, rml
 from rdflib import Graph
 
 class PredicateObjectMapParser:

@@ -1,7 +1,6 @@
-from rdflib import Graph, URIRef, Literal
+from rdflib import Graph, URIRef, Literal, namespace
 import re
-from rdflib import URIRef, Literal, Graph
-from .namespace import rdf
+from model.namespace import rdf
 from sys import exit
 from urllib.parse import urlparse
 
@@ -22,20 +21,16 @@ class ToRDF:
             print("ToRDF.to_rdf: Columns must be a list.")
             exit(1)
         
-        if not isinstance(class_map, URIRef) and not isinstance(class_map, list):
-            print("ToRDF.to_rdf: Class map must be either URIRef or list[URIRef] - class_map: ", class_map)
-            exit(1)
-
         for obj, column_name, predicate, datatype, language, split_by, template, logical_target_tuple in columns:
             logical_target_obj, target, serialization, data_dump = logical_target_tuple
             output_graph = self._create_output_graph(output_graph_dict, data_dump, serialization)
 
             _subject_template_URI = URIRef(subject_template)
 
-            if isinstance(class_map, list):
-                self._add_class_map_list(_subject_template_URI, class_map, output_graph)
+            if isinstance(class_map['rdf_class'], list):
+                self._add_class_map_list(_subject_template_URI, class_map['rdf_class'], output_graph)
             else:
-                self._add_class_map(_subject_template_URI, class_map, output_graph)
+                self._add_class_map(_subject_template_URI, class_map['rdf_class'], output_graph)
 
             if obj is not None:
                 self._add_triple(_subject_template_URI, predicate, obj, datatype, language, split_by, template, output_graph)
@@ -79,6 +74,8 @@ class ToRDF:
         return output_graph
 
     def _add_triple(self, subject, predicate, obj, datatype, language, split_by, template, output_graph):
+        assert subject is not None, "ToRDF._add_triple: Subject cannot be None."
+
         match = self._find_template_match(template)[1]
         if obj == "" or obj is None:
             return
@@ -104,18 +101,24 @@ class ToRDF:
             for value in values:
                 # Add a triple for each value
                 cell_value = self._format_cell_value(value, datatype, language)
-                output_graph.add((subject, predicate, Literal(cell_value, datatype=datatype, lang=language)))
+                self._add_by_datatype(output_graph, subject, predicate, cell_value, datatype, language)
         else:
             # Add a single triple for the cell value
-            if self._is_uri(obj):
-                output_graph.add((subject, predicate, URIRef(obj)))
-            else:
-                cell_value = self._format_cell_value(obj, datatype, language)
-                output_graph.add((subject, predicate, Literal(cell_value, datatype=datatype, lang=language)))
+            self._add_by_datatype(output_graph, subject, predicate, obj, datatype, language)
 
     def _contains_triple(self, graph, subject, predicate, object):
         return any(True for _ in graph.triples((subject, predicate, object)))
-    
+
+    def _add_by_datatype(self, graph, subject, predicate, object, datatype, language):
+        if datatype == namespace.XSD.anyURI:
+            graph.add((subject, predicate, URIRef(object)))
+        else:
+            try :
+                graph.add((subject, predicate, Literal(object, datatype=datatype, lang=language)))
+            except:
+                print("Error: ", object, ", datatype: ", datatype, ", language: ", language, "\n")
+                exit(1)
+
     def _format_cell_value(self, value, datatype, language):
         return Literal(value.replace("\n", " ").strip(), datatype=datatype, lang=language)
 
@@ -134,3 +137,9 @@ class ToRDF:
         if match:
             return match.group(1), match.group(2), match.group(3)
         return None, None, None
+
+    def _get_id_template(self, template):
+        # The pattern checks for anything between curly braces
+        pattern = r'\{(.*?)\}'
+        match = re.search(pattern, template)
+        return match.group(1) if match else None

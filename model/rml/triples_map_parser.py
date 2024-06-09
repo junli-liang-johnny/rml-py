@@ -1,4 +1,4 @@
-from .namespace import rr
+from ..namespace import rr
 
 class TriplesMapParser:
     def __init__(self, graph):
