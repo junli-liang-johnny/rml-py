@@ -39,18 +39,18 @@ class ConfigParser:
             predicate_object_maps = list(self.graph.objects(trples_map, rr.predicateObjectMap))
             for predicate_object_map in predicate_object_maps:
                 predicate_list, object_map, object_list, logical_target_map = self.predicate_object_map_parser.parse(predicate_object_map)
-                column, obj, language, datatype, split_by, _template  = self.object_map_parser.parse(object_map)
+                reference, obj, language, datatype, split_by, _template  = self.object_map_parser.parse(object_map)
                 logical_target_tuple = self.logical_target_parser.parse(predicate_object_map)
-                # print("Predicate: ", predicate_list, ", Object: ", object_list, ", Column: ", column, ", Language: ", language, ", Datatype: ", datatype, ", Split by: ", split_by, ", Template: ", _template)
+                # print("Predicate: ", predicate_list, ", Object: ", object_list, ", reference: ", reference, ", Language: ", language, ", Datatype: ", datatype, ", Split by: ", split_by, ", Template: ", _template)
 
                 for predicate in predicate_list:
                     if len(object_list) > 0:
                         for obj in object_list:
-                            columns.append((obj, column, predicate, datatype, language, split_by, _template, logical_target_tuple))
+                            columns.append((obj, reference, predicate, datatype, language, split_by, _template, logical_target_tuple))
                     elif obj is not None:
-                        columns.append((obj, column, predicate, datatype, language, split_by, _template, logical_target_tuple))
+                        columns.append((obj, reference, predicate, datatype, language, split_by, _template, logical_target_tuple))
                     else:
-                        columns.append((None, column, predicate, datatype, language, split_by, _template, logical_target_tuple))
+                        columns.append((None, reference, predicate, datatype, language, split_by, _template, logical_target_tuple))
 
             results.append((source_file, file_type, template, rdf_class_map, columns))
             print("\n")

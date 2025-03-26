@@ -6,11 +6,11 @@ This is a Python implementation for RML with additional helpful features
 
 ```
 pip install -U pyinstaller
-pyinstaller rmlpy.py
+pyinstaller main.py
 ```
 
 # Run
 
 ```
-./dist/rmlpy --config <path-to-config-file>
+./dist/main --config <path-to-config-file>
 ```

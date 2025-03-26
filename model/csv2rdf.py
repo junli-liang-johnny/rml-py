@@ -38,6 +38,7 @@ class CSV2RDF(ToRDF):
                 # Create a URI node with the row ID as the ID
                 _id_template = self._get_id_template(subject_template)
                 _subject_map = subject_template.format(**{match: row[_id_template]})
+                # print("columns: ", columns)
 
                 for obj, column_name, predicate, datatype, language, split_by, template, logical_target_tuple in columns:
                     logical_target_obj, target, serialization, data_dump = logical_target_tuple
