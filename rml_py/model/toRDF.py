@@ -1,6 +1,6 @@
 from rdflib import Graph, URIRef, Literal, namespace
 import re
-from model.namespace import rdf
+from .namespace import rdf
 from sys import exit
 from urllib.parse import urlparse
 

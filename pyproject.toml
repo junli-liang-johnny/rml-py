@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rml-py"
+version = "0.1.0"
+description = "A Python module for CSV to RDF mapping based on RDF Mapping Language (RML)."
+authors = [
+	{ name = "Johnny Leung", email = "diaopkaique@gmail.com" }
+]
+license = "MIT"
+readme = "README.md"
+keywords = ["RDF", "RML", "CSV", "Mapping", "Semantic Web"]
+dependencies = [
+	'rdflib>=7.0.0'
+]
+
+[project.optional-dependencies]
+dev = [
+	'pytest'
+]
+
+[project.urls]
+Homepage = "https://github.com/junli-liang-johnny/rml-py"
+Repository = "https://github.com/junli-liang-johnny/rml-py"
