@@ -14,3 +14,11 @@ pyinstaller main.py
 ```
 ./dist/main --config <path-to-config-file>
 ```
+
+## This can be installed and used as a python module
+
+```
+from rml_py import convert
+
+convert('<path-to-config-file-ttl>')
+```
