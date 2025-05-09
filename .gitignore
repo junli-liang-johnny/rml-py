@@ -3,3 +3,4 @@
 .env
 .pytest_cache
 rml_py.egg-info/
+**/__pycache__

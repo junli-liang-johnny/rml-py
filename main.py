@@ -1,19 +1,26 @@
 import argparse
 from rdflib import Graph 
-# from rml_py.model.config_parser import ConfigParser
-# from rml_py.model.csv2rdf import CSV2RDF
-# from rml_py.model.toRDF import ToRDF
-# from rml_py.model.format_parser import FormatParser
+from rml_py.model.config_parser import ConfigParser
+from rml_py.model.csv2rdf import CSV2RDF
+from rml_py.model.toRDF import ToRDF
+from rml_py.model.format_parser import FormatParser
 from rml_py import convert
 
-# Create an argument parser
-parser = argparse.ArgumentParser(description='Process a Turtle file.')
-parser.add_argument('--config', type=str, help='The path to the config file', required=True)
+if __name__ == "__main__":
+	# Create an argument parser
+	parser = argparse.ArgumentParser(description='Process a Turtle file.')
+	parser.add_argument('--config', type=str, help='The path to the config file', required=True)
 
-# Parse the command-line arguments
-args = parser.parse_args()
+	# Parse the command-line arguments
+	args = parser.parse_args()
 
-convert(args.config)
+	convert(args.config)
+
+# parser = argparse.ArgumentParser(description='Process a Turtle file.')
+# parser.add_argument('--config', type=str, help='The path to the config file', required=True)
+
+# # Parse the command-line arguments
+# args = parser.parse_args()
 
 # # Parse in an RDF file
 # input_graph = Graph()
