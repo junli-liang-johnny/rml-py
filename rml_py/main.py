@@ -1,5 +1,6 @@
 
-from rdflib import Graph 
+from typing import override
+from rdflib import Graph, Namespace 
 from .model.config_parser import ConfigParser
 from .model.csv2rdf import CSV2RDF
 from .model.toRDF import ToRDF
@@ -18,8 +19,6 @@ def convert(config_file: str) -> None:
 	input_graph.parse(config_file, format="turtle")
 	print("Input graph parsed")
 	output_graph_dict: dict[str: tuple[Graph, str]] = {}
-
-	namespaces = input_graph.namespaces()
 	format_parser = FormatParser()
 
 	for source_file, file_type, template, class_map, columns in ConfigParser(input_graph).parse():
@@ -32,8 +31,8 @@ def convert(config_file: str) -> None:
 	for destination in output_graph_dict:
 		output_graph, format = output_graph_dict[destination]
 		print("Destination: ", destination, ", output_graph: ", output_graph)
-		print("\n")
 		format_str = format_parser.parse(format)
-		for prefix, uri in namespaces:
-			output_graph.bind(prefix, uri)
-		output_graph.serialize(destination, format_str)
+		for prefix, ns in input_graph.namespaces():
+			output_graph.bind(prefix, ns, override=True, replace=True)
+		print("\n")
+		output_graph.serialize(destination=destination, format=format_str)

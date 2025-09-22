@@ -1,6 +1,7 @@
 **.DS_Store
 
 .env
+.vscode
 .pytest_cache
 rml_py.egg-info/
 **/__pycache__
